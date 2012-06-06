@@ -11,15 +11,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>base</artifactId>
 		<groupId>org.sakaiproject.nakamura</groupId>
+		<artifactId>base</artifactId>
 		<version>1.4.0-SNAPSHOT</version>
 		<relativePath>../../../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.sakaiproject.nakamura.resteasy.samples.sparsepeopleservice</artifactId>
+	<artifactId>org.sakaiproject.nakamura.resteasy.samples.doclet</artifactId>
 	<packaging>bundle</packaging>
-	<name>Sakai Nakamura :: Sparse People Service Sample Bundle</name>
+	<name>Sakai Nakamura :: JAX-RS Doclet Sample Bundle</name>
 	<build>
 		<plugins>
 			<plugin>
