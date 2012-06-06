@@ -27,8 +27,6 @@ import org.jboss.resteasy.spi.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.co.tfd.sm.api.jaxrs.JaxRestService;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +42,7 @@ import javax.ws.rs.core.HttpHeaders;
 @Component(immediate = true, metatype = true)
 @Service(value = Servlet.class)
 @References(value = {
-    @Reference(name = "services", referenceInterface = JaxRestService.class,
+    @Reference(name = "services", referenceInterface = Object.class, target="(javax.ws.rs=true)",
         cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC,
         strategy = ReferenceStrategy.EVENT, bind = "bindService", unbind = "unbindService")
   })
@@ -61,7 +59,7 @@ public class ResteasyServlet extends HttpServlet implements HttpRequestFactory,
   public static final String PROP_ALIAS = "alias";
   
   protected ServletContainerDispatcher servletContainerDispatcher;
-  private Set<JaxRestService> pendingServices = Sets.newHashSet();
+  private Set<Object> pendingServices = Sets.newHashSet();
   private Object registrationSync = new Object();
   private String alias;
 
@@ -108,7 +106,7 @@ public class ResteasyServlet extends HttpServlet implements HttpRequestFactory,
       }
 
       Registry registry = getRegistry();
-      for (JaxRestService service : pendingServices) {
+      for (Object service : pendingServices) {
         LOGGER.info("Registering JaxRestService {} ", service);
         registry.addSingletonResource(service);
       }
@@ -128,7 +126,7 @@ public class ResteasyServlet extends HttpServlet implements HttpRequestFactory,
     }
   }
 
-  protected void bindService(JaxRestService service) {
+  protected void bindService(Object service) {
     synchronized (registrationSync) {
       if (servletContainerDispatcher == null) {
         pendingServices.add(service);
@@ -139,7 +137,7 @@ public class ResteasyServlet extends HttpServlet implements HttpRequestFactory,
     }
   }
 
-  protected void unbindService(JaxRestService service) {
+  protected void unbindService(Object service) {
     synchronized (registrationSync) {
       if (servletContainerDispatcher == null) {
         pendingServices.remove(service);
