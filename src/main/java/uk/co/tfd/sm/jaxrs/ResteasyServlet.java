@@ -12,6 +12,11 @@ import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.ReferenceStrategy;
 import org.apache.felix.scr.annotations.References;
 import org.apache.felix.scr.annotations.Service;
+import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
+import org.codehaus.jackson.map.AnnotationIntrospector;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
+import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.core.SynchronousDispatcher;
 import org.jboss.resteasy.plugins.server.servlet.HttpRequestFactory;
@@ -100,7 +105,6 @@ public class ResteasyServlet extends HttpServlet implements HttpRequestFactory,
             this, this);
         servletContainerDispatcher.getDispatcher().getDefaultContextObjects()
             .put(ServletConfig.class, servletConfig);
-
       } finally {
         Thread.currentThread().setContextClassLoader(contextClassloader);
       }
@@ -111,6 +115,9 @@ public class ResteasyServlet extends HttpServlet implements HttpRequestFactory,
         registry.addSingletonResource(service);
       }
 
+      JacksonJaxbJsonProvider provider = createJsonProvider();
+      servletContainerDispatcher.getDispatcher().getProviderFactory().registerProviderInstance(provider);
+      
       pendingServices.clear();
     }
 
@@ -189,6 +196,19 @@ public class ResteasyServlet extends HttpServlet implements HttpRequestFactory,
 
   protected HttpResponse createServletResponse(HttpServletResponse response) {
     return new HttpServletResponseWrapper(response, getDispatcher().getProviderFactory());
+  }
+  
+  private JacksonJaxbJsonProvider createJsonProvider() {
+    ObjectMapper mapper = new ObjectMapper();
+    AnnotationIntrospector primary = new JaxbAnnotationIntrospector();
+    AnnotationIntrospector secondary = new JacksonAnnotationIntrospector();
+    AnnotationIntrospector pair = new AnnotationIntrospector.Pair(primary, secondary);
+    mapper.setAnnotationIntrospector(pair);
+    
+    // Set up the JAX-RS provider
+    JacksonJaxbJsonProvider jaxbProvider = new JacksonJaxbJsonProvider();
+    jaxbProvider.setMapper(mapper);
+    return jaxbProvider;
   }
 
 }

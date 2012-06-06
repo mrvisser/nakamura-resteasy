@@ -43,7 +43,6 @@
 							javassist,
 							jsr250-api,
 
-							resteasy-jackson-provider,
 							jackson-core-asl,
 							jackson-mapper-asl,
 							jackson-xc,
@@ -113,11 +112,6 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxb-provider</artifactId>
-			<version>2.2.3.GA</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jackson-provider</artifactId>
 			<version>2.2.3.GA</version>
 		</dependency>
 		<dependency>

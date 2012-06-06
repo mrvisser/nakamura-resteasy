@@ -27,11 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  *
  */
-@XmlRootElement
+@XmlRootElement(name="person")
 public class Person {
 
   @XmlID @XmlElement public String id;
-  @XmlElement public String name;
+  @XmlElement(name="username") public String name;
   @XmlElement public String password;
   @XmlElement public Map<String, Object> extraProperties;
   
